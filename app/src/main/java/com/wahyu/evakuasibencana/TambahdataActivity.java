@@ -77,15 +77,15 @@ public class TambahdataActivity extends AppCompatActivity implements View.OnClic
             @Override
             protected String doInBackground(Void... v) {
                 HashMap<String,String> params = new HashMap<>();
-                params.put(Konfigurasi.KEY_EMP_NAMA,name);
-                params.put(Konfigurasi.KEY_EMP_ALAMAT, alamat);
-                params.put(Konfigurasi.KEY_EMP_KELURAHAN,kelurahan);
-                params.put(Konfigurasi.KEY_EMP_KECAMATAN,kecamatan);
-                params.put(Konfigurasi.KEY_EMP_LATITUDE,latitude);
-                params.put(Konfigurasi.KEY_EMP_LONGITUDE,longitude);
+                params.put(DbContract.KEY_EMP_NAMA,name);
+                params.put(DbContract.KEY_EMP_ALAMAT, alamat);
+                params.put(DbContract.KEY_EMP_KELURAHAN,kelurahan);
+                params.put(DbContract.KEY_EMP_KECAMATAN,kecamatan);
+                params.put(DbContract.KEY_EMP_LATITUDE,latitude);
+                params.put(DbContract.KEY_EMP_LONGITUDE,longitude);
 
                 RequestHandler rh = new RequestHandler();
-                String res = rh.sendPostRequest(Konfigurasi.URL_ADD, params);
+                String res = rh.sendPostRequest(DbContract.URL_ADD, params);
                 return res;
             }
         }

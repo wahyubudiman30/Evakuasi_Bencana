@@ -4,9 +4,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="com.google.android.provider.gsf.permission.READ_GSERVICES" />
 
     <application
         android:allowBackup="true"
@@ -17,12 +14,17 @@
         android:theme="@style/Theme.EvakuasiBencana"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".DashboardAdminActivity"
+            android:name=".TampilLokasiUserActivity"
             android:exported="false" />
         <activity
             android:name=".DashboardUserActivity"
-            android:exported="false"
-            android:label="@string/title_activity_dashboard_user" />
+            android:exported="false" />
+        <activity
+            android:name=".PengungsianActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DashboardAdminActivity"
+            android:exported="false" />
         <activity
             android:name=".TampilLokasiActivity"
             android:exported="false" />
@@ -34,9 +36,6 @@
             android:exported="false" />
         <activity
             android:name=".TambahgaleriActivity"
-            android:exported="false" />
-        <activity
-            android:name=".GaleriActivity"
             android:exported="false" />
         <activity
             android:name=".TambahdataActivity"

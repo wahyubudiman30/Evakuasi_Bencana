@@ -42,7 +42,7 @@ public class TampilLokasiActivity extends AppCompatActivity implements View.OnCl
 
         Intent intent = getIntent();
 
-        id = intent.getStringExtra(Konfigurasi.EMP_ID);
+        id = intent.getStringExtra(DbContract.EMP_ID);
 
         TampilID = (EditText) findViewById(R.id.TampilID);
         TampilNama = (EditText) findViewById(R.id.TampilNama);
@@ -82,7 +82,7 @@ public class TampilLokasiActivity extends AppCompatActivity implements View.OnCl
             @Override
             protected String doInBackground(Void... params) {
                 RequestHandler rh = new RequestHandler();
-                String s = rh.sendGetRequestParam(Konfigurasi.URL_GET_EMP,id);
+                String s = rh.sendGetRequestParam(DbContract.URL_GET_EMP,id);
                 return s;
             }
         }
@@ -93,14 +93,14 @@ public class TampilLokasiActivity extends AppCompatActivity implements View.OnCl
     private void showEmployee(String json){
         try {
             JSONObject jsonObject = new JSONObject(json);
-            JSONArray result = jsonObject.getJSONArray(Konfigurasi.TAG_JSON_ARRAY);
+            JSONArray result = jsonObject.getJSONArray(DbContract.TAG_JSON_ARRAY);
             JSONObject c = result.getJSONObject(0);
-            String name = c.getString(Konfigurasi.TAG_NAMA);
-            String alamat = c.getString(Konfigurasi.TAG_ALAMAT);
-            String kel = c.getString(Konfigurasi.TAG_KELURAHAN);
-            String kec = c.getString(Konfigurasi.TAG_KECAMATAN);
-            String lat = c.getString(Konfigurasi.TAG_LATITUDE);
-            String longi = c.getString(Konfigurasi.TAG_LONGITUDE);
+            String name = c.getString(DbContract.TAG_NAMA);
+            String alamat = c.getString(DbContract.TAG_ALAMAT);
+            String kel = c.getString(DbContract.TAG_KELURAHAN);
+            String kec = c.getString(DbContract.TAG_KECAMATAN);
+            String lat = c.getString(DbContract.TAG_LATITUDE);
+            String longi = c.getString(DbContract.TAG_LONGITUDE);
 
             TampilNama.setText(name);
             TampilAlamat.setText(alamat);
@@ -129,6 +129,8 @@ public class TampilLokasiActivity extends AppCompatActivity implements View.OnCl
             protected void onPreExecute() {
                 super.onPreExecute();
                 loading = ProgressDialog.show(TampilLokasiActivity.this,"Updating...","Wait...",false,false);
+                Intent intent= new Intent(TampilLokasiActivity.this, PengungsianActivity.class);
+                startActivity(intent);
             }
 
             @Override
@@ -141,15 +143,17 @@ public class TampilLokasiActivity extends AppCompatActivity implements View.OnCl
             @Override
             protected String doInBackground(Void... params) {
                 HashMap<String,String> hashMap = new HashMap<>();
-                hashMap.put(Konfigurasi.KEY_EMP_ID,id);
-                hashMap.put(Konfigurasi.KEY_EMP_NAMA,name);
-                hashMap.put(Konfigurasi.KEY_EMP_LATITUDE,lat);
-                hashMap.put(Konfigurasi.KEY_EMP_LONGITUDE,longi);
-                hashMap.put(Konfigurasi.KEY_EMP_ALAMAT,alamat);
+                hashMap.put(DbContract.KEY_EMP_ID,id);
+                hashMap.put(DbContract.KEY_EMP_NAMA,name);
+                hashMap.put(DbContract.KEY_EMP_ALAMAT,alamat);
+                hashMap.put(DbContract.KEY_EMP_KELURAHAN,kel);
+                hashMap.put(DbContract.KEY_EMP_KECAMATAN,kec);
+                hashMap.put(DbContract.KEY_EMP_LATITUDE,lat);
+                hashMap.put(DbContract.KEY_EMP_LONGITUDE,longi);
 
                 RequestHandler rh = new RequestHandler();
 
-                String s = rh.sendPostRequest(Konfigurasi.URL_UPDATE_EMP,hashMap);
+                String s = rh.sendPostRequest(DbContract.URL_UPDATE_EMP,hashMap);
 
                 return s;
             }
@@ -166,7 +170,7 @@ public class TampilLokasiActivity extends AppCompatActivity implements View.OnCl
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                loading = ProgressDialog.show(TampilLokasiActivity.this, "Updating...", "Tunggu...", false, false);
+                loading = ProgressDialog.show(TampilLokasiActivity.this, "Menghapus...", "Tunggu...", false, false);
             }
 
             @Override
@@ -179,7 +183,7 @@ public class TampilLokasiActivity extends AppCompatActivity implements View.OnCl
             @Override
             protected String doInBackground(Void... params) {
                 RequestHandler rh = new RequestHandler();
-                String s = rh.sendGetRequestParam(Konfigurasi.URL_DELETE_EMP, id);
+                String s = rh.sendGetRequestParam(DbContract.URL_DELETE_EMP, id);
                 return s;
             }
         }
@@ -190,7 +194,7 @@ public class TampilLokasiActivity extends AppCompatActivity implements View.OnCl
 
     private void confirmDeleteEmployee(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("Apakah Kamu Yakin Ingin Menghapus Pegawai ini?");
+        alertDialogBuilder.setMessage("Apakah Kamu Yakin Ingin Menghapus Data ini?");
 
         alertDialogBuilder.setPositiveButton("Ya",
                 new DialogInterface.OnClickListener() {

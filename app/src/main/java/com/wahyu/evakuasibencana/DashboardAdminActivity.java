@@ -19,11 +19,6 @@ public class DashboardAdminActivity extends AppCompatActivity {
         startActivity(pengungsian);
     }
 
-    public void Geleri(View view) {
-        Intent geleri = new Intent(DashboardAdminActivity.this, GaleriActivity.class);
-        startActivity(geleri);
-    }
-
     public void About(View view) {
         Intent about = new Intent(DashboardAdminActivity.this, AboutActivity.class);
         startActivity(about);
@@ -32,5 +27,10 @@ public class DashboardAdminActivity extends AppCompatActivity {
     public void Profile(View view) {
         Intent profil = new Intent(DashboardAdminActivity.this, ProfilActivity.class);
         startActivity(profil);
+    }
+
+    public void Galeri(View view) {
+        Intent maps = new Intent(DashboardAdminActivity.this, MapsAdminActivity.class);
+        startActivity(maps);
     }
 }

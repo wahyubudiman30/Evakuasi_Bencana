@@ -2,14 +2,14 @@ package com.wahyu.evakuasibencana;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import org.json.JSONArray;
@@ -19,18 +19,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PengungsianActivity extends AppCompatActivity implements ListView.OnItemClickListener{
-
+public class PengungsianActivity extends AppCompatActivity implements ListView.OnItemClickListener {
     private ListView listView;
-
     private String JSON_STRING;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pengungsian);
-
-        listView = (ListView) findViewById(R.id.listV);
+        listView = (ListView) findViewById(R.id.listView);
         listView.setOnItemClickListener(this);
         getJSON();
     }
@@ -39,26 +36,26 @@ public class PengungsianActivity extends AppCompatActivity implements ListView.O
         ArrayList<HashMap<String,String>> list = new ArrayList<HashMap<String, String>>();
         try {
             jsonObject = new JSONObject(JSON_STRING);
-            JSONArray result = jsonObject.getJSONArray(Konfigurasi.TAG_JSON_ARRAY);
+            JSONArray result = jsonObject.getJSONArray(DbContract.TAG_JSON_ARRAY);
 
             for(int i = 0; i<result.length(); i++){
                 JSONObject jo = result.getJSONObject(i);
-                String id = jo.getString(Konfigurasi.TAG_ID);
-                String name = jo.getString(Konfigurasi.TAG_NAMA);
-                String alamat = jo.getString(Konfigurasi.TAG_ALAMAT);
-                String kecamatan = jo.getString(Konfigurasi.TAG_KECAMATAN);
-                String kelurahan = jo.getString(Konfigurasi.TAG_KELURAHAN);
-                String latitude = jo.getString(Konfigurasi.TAG_LATITUDE);
-                String longitude = jo.getString(Konfigurasi.TAG_LONGITUDE);
+                String id = jo.getString(DbContract.TAG_ID);
+                String name = jo.getString(DbContract.TAG_NAMA);
+                //String alamat = jo.getString(DbContract.TAG_ALAMAT);
+                //String kecamatan = jo.getString(DbContract.TAG_KECAMATAN);
+                //String kelurahan = jo.getString(DbContract.TAG_KELURAHAN);
+                //String latitude = jo.getString(DbContract.TAG_LATITUDE);
+                //String longitude = jo.getString(DbContract.TAG_LONGITUDE);
 
                 HashMap<String,String> employees = new HashMap<>();
-                employees.put(Konfigurasi.TAG_ID,id);
-                employees.put(Konfigurasi.TAG_NAMA,name);
-                employees.put(Konfigurasi.TAG_ALAMAT,alamat);
-                employees.put(Konfigurasi.TAG_KECAMATAN,kecamatan);
-                employees.put(Konfigurasi.TAG_KELURAHAN,kelurahan);
-                employees.put(Konfigurasi.TAG_LATITUDE,latitude);
-                employees.put(Konfigurasi.TAG_LONGITUDE,longitude);
+                employees.put(DbContract.TAG_ID,id);
+                employees.put(DbContract.TAG_NAMA,name);
+                //employees.put(DbContract.TAG_ALAMAT,alamat);
+                //employees.put(DbContract.TAG_KECAMATAN,kecamatan);
+                //employees.put(DbContract.TAG_KELURAHAN,kelurahan);
+                //employees.put(DbContract.TAG_LATITUDE,latitude);
+                //employees.put(DbContract.TAG_LONGITUDE,longitude);
                 list.add(employees);
             }
         } catch (JSONException e) {
@@ -66,7 +63,7 @@ public class PengungsianActivity extends AppCompatActivity implements ListView.O
         }
         ListAdapter adapter = new SimpleAdapter(
                 PengungsianActivity.this, list, R.layout.list_item,
-                new String[]{Konfigurasi.TAG_ID,Konfigurasi.TAG_NAMA},
+                new String[]{DbContract.TAG_ID,DbContract.TAG_NAMA},
                 new int[]{R.id.id, R.id.name});
 
         listView.setAdapter(adapter);
@@ -93,7 +90,7 @@ public class PengungsianActivity extends AppCompatActivity implements ListView.O
             @Override
             protected String doInBackground(Void... params) {
                 RequestHandler rh = new RequestHandler();
-                String s = rh.sendGetRequest(Konfigurasi.URL_GET_ALL);
+                String s = rh.sendGetRequest(DbContract.URL_GET_ALL);
                 return s;
             }
         }
@@ -105,8 +102,8 @@ public class PengungsianActivity extends AppCompatActivity implements ListView.O
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Intent intent = new Intent(this, TampilLokasiActivity.class);
         HashMap<String,String> map =(HashMap)parent.getItemAtPosition(position);
-        String empId = map.get(Konfigurasi.TAG_ID).toString();
-        intent.putExtra(Konfigurasi.EMP_ID,empId);
+        String empId = map.get(DbContract.TAG_ID).toString();
+        intent.putExtra(DbContract.EMP_ID,empId);
         startActivity(intent);
     }
 

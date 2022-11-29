@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
         BtnPengguna.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent DBUser = new Intent(MainActivity.this, DashboardUserActivity.class);
-                startActivity(DBUser);
+                Intent intent= new Intent(MainActivity.this, DashboardUserActivity.class);
+                startActivity(intent);
             }
         });
     }
