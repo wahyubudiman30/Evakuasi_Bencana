@@ -41,9 +41,6 @@
             android:name=".TambahdataActivity"
             android:exported="false" />
         <activity
-            android:name=".UbahpassActivity"
-            android:exported="false" />
-        <activity
             android:name=".UbahprofilActivity"
             android:exported="false" />
         <activity

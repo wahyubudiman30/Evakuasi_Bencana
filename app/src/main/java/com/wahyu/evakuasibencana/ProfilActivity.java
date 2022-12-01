@@ -1,16 +1,28 @@
 package com.wahyu.evakuasibencana;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -23,12 +35,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfilActivity extends AppCompatActivity {
 
     ImageView profile_image;
     TextView username_txt, ttl_txt, jk_txt, telepon_txt, jabatan_txt, alamat_txt, email_txt;
-    private String strJson, apiUrl = "http://192.168.1.12/ApiEvakuasiBencana/lihatprofil.php";
+    private EditText email, passlama, passbaru1, passbaru2;
+    private Button cPass;
+    private String strJson;
 
     private OkHttpClient client;
     private Response response;
@@ -58,13 +74,92 @@ public class ProfilActivity extends AppCompatActivity {
         client = new OkHttpClient();
         new GetUserDataRequest().execute();
 
+        email = (EditText) findViewById(R.id.TxResetEmail);
+        passlama = (EditText) findViewById(R.id.TxResetPassLama);
+        passbaru1 = (EditText) findViewById(R.id.TxResetPassBaru);
+        passbaru2 = (EditText) findViewById(R.id.TxResetConPass);
+
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+
+        Intent i = getIntent();
+        final String mName = i.getStringExtra("username");
+        final String mEmail = i.getStringExtra("email");
+
+
+        cPass = findViewById(R.id.BtnUbahAkun);
+
+        cPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                View resetpasslayout = LayoutInflater.from(ProfilActivity.this).inflate(R.layout.activity_resetpass,null);
+                EditText Email = resetpasslayout.findViewById(R.id.TxResetEmail);
+                EditText OldPass = resetpasslayout.findViewById(R.id.TxResetPassLama);
+                EditText NewPass = resetpasslayout.findViewById(R.id.TxResetPassBaru);
+                EditText ConNewPass = resetpasslayout.findViewById(R.id.TxResetConPass);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProfilActivity.this);
+                builder.setTitle("RESET PASSWORD");
+                builder.setView(resetpasslayout);
+                builder.setPositiveButton("RESET", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String email = Email.getText().toString().trim();
+                        String oldpassword = OldPass.getText().toString().trim();
+                        String newpassword = NewPass.getText().toString().trim();
+                        String newconpassword = ConNewPass.getText().toString().trim();
+
+                        //
+                        if (email.isEmpty()||oldpassword.isEmpty()||newpassword.isEmpty()||newconpassword.isEmpty()){
+                            massage("Isi semua kolom");
+                        }
+                        else {
+                            progressDialog.show();
+                            StringRequest stringRequest = new StringRequest(com.android.volley.Request.Method.POST, DbContract.URL_RESETPASS,
+                                    new com.android.volley.Response.Listener<String>()
+                                    {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            progressDialog.dismiss();
+                                            massage(response);
+                                        }
+                                    }, new com.android.volley.Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    progressDialog.dismiss();
+                                    massage(error.getMessage());
+                                }
+                            }){
+                                @Nullable
+                                @Override
+                                protected Map<String, String> getParams() throws AuthFailureError {
+                                    Map<String,String> params = new HashMap<>();
+                                    params.put("oldpassword",oldpassword);
+                                    params.put("newpassword",newpassword);
+                                    params.put("conpassword",newconpassword);
+                                    params.put("email",mEmail);
+                                    return params;
+                                }
+                            };
+                            RequestQueue queue = Volley.newRequestQueue(ProfilActivity.this);
+                            queue.add(stringRequest);
+                        }
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
     }
+    public void massage(String massage){
+        Toast.makeText(this, massage, Toast.LENGTH_SHORT).show();
+    }
+
     public class GetUserDataRequest extends AsyncTask<Void,Void,Void>{
 
         @Override
         protected Void doInBackground(Void... voids) {
-            //requestBody = new FormEncodingBuilder().build();
-            request = new Request.Builder().url(apiUrl).build();
+            request = new Request.Builder().url(DbContract.SERVER_READ_URL).build();
             try {
                 response = client.newCall(request).execute();
             } catch (IOException e) {
@@ -114,13 +209,13 @@ public class ProfilActivity extends AppCompatActivity {
         }
     }
 
-    public void Ubahakun(View view) {
-        Intent intent= new Intent(ProfilActivity.this, UbahprofilActivity.class);
+    public void Tambahadmin(View view) {
+        Intent intent= new Intent(ProfilActivity.this, TambahakunActivity.class);
         startActivity(intent);
     }
 
-    public void Tambahadmin(View view) {
-        Intent intent= new Intent(ProfilActivity.this, TambahakunActivity.class);
+    public void EditProfil(View view) {
+        Intent intent= new Intent(ProfilActivity.this, UbahprofilActivity.class);
         startActivity(intent);
     }
 }

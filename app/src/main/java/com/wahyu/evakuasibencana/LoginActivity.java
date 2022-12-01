@@ -68,9 +68,13 @@ public class LoginActivity extends AppCompatActivity {
                                 JSONObject jsonObject = new JSONObject(response);
                                 String resp = jsonObject.getString("server_response");
                                 if (resp.equals("[{\"status\":\"OK\"}]")) {
+
+                                    //String email = jsonObject.getString("email");
+
                                     Toast.makeText(getApplicationContext(), "Login Berhasil", Toast.LENGTH_SHORT).show();
-                                    Intent DBAdmin = new Intent(LoginActivity.this, DashboardAdminActivity.class);
-                                    startActivity(DBAdmin);
+                                    Intent intent = new Intent(LoginActivity.this, DashboardAdminActivity.class);
+                                    startActivity(intent);
+                                    //intent.putExtra("email",email);
                                 } else {
                                     Toast.makeText(getApplicationContext(), resp, Toast.LENGTH_SHORT).show();
                                 }
